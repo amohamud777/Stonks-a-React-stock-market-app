@@ -24,7 +24,9 @@ export const stonk = {
   },
 
   getYesterdaysClose: (ticker, lastTradingDay, callback) => {
+
     if (lastTradingDay !== "" && lastTradingDay !== undefined) {
+      console.log("here")
       const url = stonk.yesterCloseURL(
         ticker,
         stonk.formatDate(lastTradingDay)
