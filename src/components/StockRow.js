@@ -34,7 +34,7 @@ class StockRow extends Component {
   }
 
   applyData(data){
-    const formattedPrice = (data.price == undefined) ? null : data.price.toFixed(2)
+    const formattedPrice = (data.price === undefined) ? null : data.price.toFixed(2)
     this.setState({
       price: data.price.toFixed(2),
       date: data.date,
@@ -50,7 +50,13 @@ class StockRow extends Component {
 
   componentDidUpdate(prevProps) {
 
-    if(prevProps.lastTradingDay == null){
+    if(prevProps.lastTradingDay == null && this.props.lastTradingDay != null){
+      this.setState({
+        canGetClose: true
+      })
+    }
+    if(this.state.canGetClose && this.state.price != null){
+      console.log("here")
     stonk.getYesterdaysClose(this.props.ticker, this.props.lastTradingDay, (yesterday) => {
       const dollarChange = (this.state.price - yesterday.price).toFixed(2)
       const percentChange = (100 * dollarChange /
@@ -58,8 +64,10 @@ class StockRow extends Component {
 
 
       this.setState({
+
         dollarChange: `${dollarChange}` , //yesterday's price is yesterday's close
-        percentChange: `(${percentChange}%)`
+        percentChange: `(${percentChange}%)`,
+        canGetClose: false
         })
       })
     }
